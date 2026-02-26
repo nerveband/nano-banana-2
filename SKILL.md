@@ -70,8 +70,9 @@ Saved: /path/to/acme_logo.png
 
 | Script | Purpose |
 |--------|---------|
-| `generate_image.py` | Image generation with templates, aspect ratios, smart defaults, grounding |
+| `generate_image.py` | Single image generation with templates, aspect ratios, smart defaults, grounding |
 | `chat_image.py` | Interactive multi-turn refinement |
+| `batch_generate.py` | Batch generation at 50% off - submit many prompts, get results in up to 24h |
 
 ## Core Features
 
@@ -189,6 +190,45 @@ uv run {baseDir}/scripts/generate_image.py \
 ```
 
 **Available Templates:** `photorealistic`, `product`, `logo`, `social`, `portrait`, `infographic`
+
+### Batch Generation (50% Off)
+
+Submit many prompts at once for half-price processing (up to 24h turnaround):
+
+```bash
+# From a text file (one prompt per line)
+uv run {baseDir}/scripts/batch_generate.py -f prompts.txt -o ./batch_output/
+
+# Inline prompts
+uv run {baseDir}/scripts/batch_generate.py \
+  -p "A sunset over mountains" \
+  -p "A cat in a spacesuit" \
+  -p "Minimalist coffee shop logo" \
+  -o ./batch_output/
+
+# With aspect ratio and resolution
+uv run {baseDir}/scripts/batch_generate.py -f prompts.txt -o ./output/ --aspect 16:9 --resolution 2K
+
+# Submit and wait for results (blocks until done)
+uv run {baseDir}/scripts/batch_generate.py -f prompts.txt -o ./output/ --wait
+
+# Check status of a running job
+uv run {baseDir}/scripts/batch_generate.py --status batches/abc123
+
+# Download results when job completes
+uv run {baseDir}/scripts/batch_generate.py --download batches/abc123 -o ./output/
+```
+
+**Batch pricing** (50% off standard):
+
+| Resolution | Standard | Batch |
+|------------|----------|-------|
+| 0.5K | $0.045 | **$0.022** |
+| 1K | $0.067 | **$0.034** |
+| 2K | $0.101 | **$0.050** |
+| 4K | $0.151 | **$0.076** |
+
+**How it works:** Prompts are written to a JSONL file, uploaded to the API, and processed asynchronously. Results arrive as images within 24 hours. Use `--wait` to block until done, or check with `--status` and download later with `--download`.
 
 ### Chat Commands
 
