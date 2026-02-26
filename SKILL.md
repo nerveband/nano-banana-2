@@ -1,13 +1,13 @@
 ---
 name: nano-banana-2
-description: Generate, edit, and refine images using Google's Nano Banana 2 (Gemini 3.1 Flash Image) - Pro-level quality at Flash speed with extended aspect ratios, Google Image Search grounding, controllable thinking, and 0.5K-4K resolution. Use when asked to generate, create, edit, or refine images with Nano Banana 2, or when fast high-quality image generation is needed.
+description: Generate, edit, and refine images using Google's Nano Banana 2 (Gemini 3.1 Flash Image) - Pro-level quality at Flash speed with extended aspect ratios, controllable thinking, Google Search grounding, and 0.5K-4K resolution. Use when asked to generate, create, edit, or refine images with Nano Banana 2, or when fast high-quality image generation is needed.
 homepage: https://ai.google.dev/
 metadata: {"moltbot":{"emoji":"🍌","requires":{"bins":["uv"],"env":["GEMINI_API_KEY"]},"primaryEnv":"GEMINI_API_KEY","install":[{"id":"uv-brew","kind":"brew","formula":"uv","bins":["uv"],"label":"Install uv (brew)"}]}}
 ---
 
 # Nano Banana 2
 
-Pro-level image generation at Flash speed, powered by Gemini 3.1 Flash Image. Generate, edit, and refine images with extended aspect ratios, Google Image Search grounding, controllable thinking, and 0.5K-4K resolution.
+Pro-level image generation at Flash speed, powered by Gemini 3.1 Flash Image. Generate, edit, and refine images with extended aspect ratios, controllable thinking, Google Search grounding, and 0.5K-4K resolution.
 
 ## What's New vs Nano Banana Pro
 
@@ -18,7 +18,6 @@ Pro-level image generation at Flash speed, powered by Gemini 3.1 Flash Image. Ge
 | Resolutions | 1K, 2K, 4K | **0.5K**, 1K, 2K, 4K |
 | Aspect ratios | 10 ratios | **14 ratios** (+1:4, 4:1, 1:8, 8:1) |
 | Reference images | Up to 14 | Up to 10 objects, 4 characters |
-| Image Search | No | **Yes** (exclusive) |
 | Thinking control | Built-in (no control) | **Controllable** (high/minimal) |
 | Batch API | No | **Yes** |
 | Text rendering | Good | **Improved** (infographics, menus, diagrams) |
@@ -195,21 +194,9 @@ uv run {baseDir}/scripts/generate_image.py -p "Quick sketch" -f sketch.png --thi
 uv run {baseDir}/scripts/generate_image.py -p "Complex scene" -f scene.png --thinking high --include-thoughts
 ```
 
-### Google Image Search Grounding
+### Google Search Grounding
 
-Exclusive to Nano Banana 2 - ground generations in real image search results:
-
-```bash
-uv run {baseDir}/scripts/generate_image.py \
-  -p "Photo of the Eiffel Tower with current lighting installation" \
-  -f eiffel.png \
-  --image-search \
-  --aspect 3:4
-```
-
-### Google Web Search Grounding
-
-Generate images with real-time data:
+Generate images informed by real-time search data:
 
 ```bash
 uv run {baseDir}/scripts/generate_image.py \
@@ -315,8 +302,7 @@ uv run {baseDir}/scripts/batch_generate.py --download batches/abc123 -o ./output
 - `/aspect <ratio>` - Change aspect ratio (14 options)
 - `/resolution <size>` - Change resolution (0.5K/1K/2K/4K)
 - `/thinking <level>` - Adjust thinking (high/minimal)
-- `/search` - Toggle Web Search grounding
-- `/imgsearch` - Toggle Image Search grounding
+- `/search` - Toggle Google Search grounding
 - `/clear` - Clear conversation
 - `/config` - Show settings
 
@@ -347,4 +333,4 @@ Or in `~/.clawdbot/moltbot.json`:
 - Maximum 10 reference images for objects, 4 for character consistency
 - All images include SynthID watermarking
 - Batch API compatible for high-volume workflows
-- Model knowledge cutoff: January 2025 (use `--search` or `--image-search` for current data)
+- Model knowledge cutoff: January 2025 (use `--search` for current data)

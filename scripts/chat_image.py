@@ -19,8 +19,7 @@ Commands:
     /aspect <ratio>      - Set aspect ratio (1:1, 16:9, 1:4, 8:1, etc.)
     /resolution <size>   - Set resolution (0.5K, 1K, 2K, 4K)
     /thinking <level>    - Set thinking level (high, minimal)
-    /search              - Toggle Google Web Search grounding
-    /imgsearch           - Toggle Google Image Search grounding
+    /search              - Toggle Google Search grounding
     /clear               - Clear conversation history
     /help                - Show this help
     exit, quit           - Exit the chat
@@ -69,7 +68,6 @@ def main():
         "resolution": "1K",
         "thinking": "high",
         "search": False,
-        "image_search": False,
     }
 
     def make_chat_config():
@@ -122,8 +120,7 @@ def main():
                     print(f"  Aspect ratio: {config['aspect_ratio']}")
                     print(f"  Resolution: {config['resolution']}")
                     print(f"  Thinking: {config['thinking']}")
-                    print(f"  Web Search: {config['search']}")
-                    print(f"  Image Search: {config['image_search']}")
+                    print(f"  Google Search: {config['search']}")
                     print(f"  Turns: {conversation_turns}")
 
                 elif command == "/aspect":
@@ -156,10 +153,6 @@ def main():
                 elif command == "/search":
                     config["search"] = not config["search"]
                     print(f"Google Web Search grounding: {'enabled' if config['search'] else 'disabled'}")
-
-                elif command == "/imgsearch":
-                    config["image_search"] = not config["image_search"]
-                    print(f"Google Image Search grounding: {'enabled' if config['image_search'] else 'disabled'}")
 
                 elif command == "/clear":
                     chat = client.chats.create(
@@ -204,14 +197,9 @@ def main():
                 )
             )
 
-            # Add grounding tools
-            tools = []
+            # Add search grounding if enabled
             if config["search"]:
-                tools.append({"google_search": {}})
-            if config["image_search"]:
-                tools.append({"google_image_search": {}})
-            if tools:
-                message_config.tools = tools
+                message_config.tools = [{"google_search": {}}]
 
             response = chat.send_message(
                 user_input,

@@ -198,8 +198,8 @@ Examples:
   # Low-res thumbnail (0.5K)
   uv run generate_image.py -p "App icon" -f icon.png --resolution 0.5K --aspect 1:1
 
-  # With image search grounding
-  uv run generate_image.py -p "Current Tokyo skyline at night" -f tokyo.png --image-search --aspect 16:9
+  # With search grounding
+  uv run generate_image.py -p "Current Tokyo skyline at night" -f tokyo.png --search --aspect 16:9
         """
     )
 
@@ -254,12 +254,7 @@ Examples:
     parser.add_argument(
         "--search",
         action="store_true",
-        help="Enable Google Web Search grounding for real-time data"
-    )
-    parser.add_argument(
-        "--image-search",
-        action="store_true",
-        help="Enable Google Image Search grounding (exclusive to Nano Banana 2)"
+        help="Enable Google Search grounding for real-time data"
     )
 
     # Template options
@@ -353,9 +348,7 @@ Examples:
     print(f"  Aspect ratio: {args.aspect}")
     print(f"  Thinking: {args.thinking}")
     if args.search:
-        print(f"  Web Search: enabled")
-    if args.image_search:
-        print(f"  Image Search: enabled")
+        print(f"  Google Search: enabled")
     if args.system:
         print(f"  System prompt: {args.system[:50]}...")
     print()
@@ -444,14 +437,9 @@ Examples:
     if args.system:
         config.system_instruction = args.system
 
-    # Add grounding tools
-    tools = []
+    # Add search grounding if enabled
     if args.search:
-        tools.append({"google_search": {}})
-    if args.image_search:
-        tools.append({"google_image_search": {}})
-    if tools:
-        config.tools = tools
+        config.tools = [{"google_search": {}}]
 
     try:
         response = client.models.generate_content(
