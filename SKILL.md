@@ -25,45 +25,21 @@ Pro-level image generation at Flash speed, powered by Gemini 3.1 Flash Image. Ge
 
 ## Quick Start
 
-### Generate an Image
-
 ```bash
-# Basic generation
+# Text-to-image (prompt only)
 uv run {baseDir}/scripts/generate_image.py -p "A serene mountain landscape at sunset" -f landscape.png
 
-# With aspect ratio and thinking
-uv run {baseDir}/scripts/generate_image.py -p "Epic cityscape" -f city.png --aspect 16:9 --thinking high
-
-# Edit existing image
+# Edit an existing image (prompt + image)
 uv run {baseDir}/scripts/generate_image.py -p "Add dramatic sunset colors" -f edited.png -i photo.png
 
-# Multi-image composition (up to 10 images)
-uv run {baseDir}/scripts/generate_image.py -p "Product lineup" -f lineup.png -i prod1.png -i prod2.png -i prod3.png
+# Multi-image composition (prompt + multiple images)
+uv run {baseDir}/scripts/generate_image.py -p "Product lineup" -f lineup.png -i prod1.png -i prod2.png
 
-# Ultra-wide banner (new ratio)
-uv run {baseDir}/scripts/generate_image.py -p "Website hero banner for tech company" -f hero.png --aspect 8:1
-
-# Fast thumbnail (new 0.5K resolution)
-uv run {baseDir}/scripts/generate_image.py -p "App icon" -f icon.png --resolution 0.5K --aspect 1:1
-
-# With Image Search grounding (exclusive to Nano Banana 2)
-uv run {baseDir}/scripts/generate_image.py -p "Current Tokyo skyline at night" -f tokyo.png --image-search --aspect 16:9
-```
-
-### Interactive Chat Mode
-
-```bash
+# Interactive chat for iterative refinement
 uv run {baseDir}/scripts/chat_image.py
-```
 
-Then chat naturally:
-```
-> Create a logo for "Acme Corp"
-[Image generated]
-> Make the text bolder and add a blue gradient
-[Refined image]
-> /save acme_logo.png
-Saved: /path/to/acme_logo.png
+# Batch generation at 50% off
+uv run {baseDir}/scripts/batch_generate.py -f prompts.txt -o ./output/ --wait
 ```
 
 ## Available Scripts
@@ -73,6 +49,109 @@ Saved: /path/to/acme_logo.png
 | `generate_image.py` | Single image generation with templates, aspect ratios, smart defaults, grounding |
 | `chat_image.py` | Interactive multi-turn refinement |
 | `batch_generate.py` | Batch generation at 50% off - submit many prompts, get results in up to 24h |
+
+## Usage Modes
+
+### Text-to-Image (prompt only)
+
+Generate a new image from a text description:
+
+```bash
+# Simple prompt
+uv run {baseDir}/scripts/generate_image.py -p "A cozy coffee shop interior" -f cafe.png
+
+# Detailed prompt with style guidance
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Watercolor painting of a Japanese garden, cherry blossoms, koi pond, soft morning light" \
+  -f garden.png --aspect 16:9
+
+# With system prompt for style consistency
+uv run {baseDir}/scripts/generate_image.py \
+  -p "A cat on a windowsill" -f cat.png \
+  --system "Use only retro pixel art style, 16-bit aesthetic"
+```
+
+### Image Editing (prompt + one image)
+
+Pass an existing image with `-i` and describe what to change:
+
+```bash
+# Add elements to a photo
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Add a rainbow in the sky" \
+  -f edited.png -i original_photo.png
+
+# Change style of an existing image
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Convert this to a pencil sketch style" \
+  -f sketch.png -i photo.png
+
+# Remove or replace elements
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Remove the background and replace with a clean white studio backdrop" \
+  -f clean.png -i product_photo.png
+
+# Upscale / enhance
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Enhance this image with sharper details and better lighting" \
+  -f enhanced.png -i low_quality.png --resolution 4K
+
+# Translate text in an image
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Translate all text in this image to Spanish" \
+  -f spanish_menu.png -i english_menu.png
+```
+
+The aspect ratio and resolution are auto-detected from the input image unless you override with `--aspect` or `--resolution`.
+
+### Multi-Image Composition (prompt + multiple images)
+
+Pass up to 10 images for object reference or up to 4 for character consistency:
+
+```bash
+# Combine elements from multiple images
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Create a collage combining these product photos into a lifestyle scene" \
+  -f lifestyle.png -i prod1.png -i prod2.png -i prod3.png
+
+# Character consistency across scenes
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Show this character riding a bicycle in a park" \
+  -f scene2.png -i character_ref.png
+
+# Product in different settings (use same product image as reference)
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Show this coffee mug on a desk in a modern office" \
+  -f mug_office.png -i mug_photo.png
+
+# Style transfer from one image to another
+uv run {baseDir}/scripts/generate_image.py \
+  -p "Apply the art style of the first image to the subject in the second image" \
+  -f styled.png -i style_ref.png -i subject.png
+```
+
+**Limits:** Up to 10 reference images for objects, up to 4 for character consistency.
+
+### Interactive Refinement (chat mode)
+
+For iterative back-and-forth editing where each turn builds on the last:
+
+```bash
+uv run {baseDir}/scripts/chat_image.py
+```
+
+```
+> Create a minimalist poster for a jazz festival
+[Image generated]
+> Make the typography bolder and add a saxophone silhouette
+[Refined image]
+> Change the color scheme to deep blue and gold
+[Refined image]
+> /save jazz_poster.png
+Saved!
+```
+
+The chat preserves context, so each prompt refines the previous result without re-describing everything.
 
 ## Core Features
 
