@@ -91,12 +91,14 @@ uv run {baseDir}/scripts/generate_image.py -p "Vertical ad" -f skyscraper.png --
 
 ### Resolutions
 
-| Resolution | Size | Cost | Best For |
-|------------|------|------|----------|
-| 0.5K | 512px | Cheapest | Thumbnails, icons, quick previews |
-| 1K | 1024px | ~$0.04/image | Web, social media, iterations |
-| 2K | 2048px | ~$0.05/image | Digital displays, presentations |
-| 4K | 4096px | ~$0.08/image | Print materials, large displays |
+| Resolution | Size | Cost | Batch Cost | Best For |
+|------------|------|------|------------|----------|
+| 0.5K | 512px | ~$0.045/image | ~$0.022 | Thumbnails, icons, quick previews |
+| 1K | 1024px | ~$0.067/image | ~$0.034 | Web, social media, iterations |
+| 2K | 2048px | ~$0.101/image | ~$0.050 | Digital displays, presentations |
+| 4K | 4096px | ~$0.151/image | ~$0.076 | Print materials, large displays |
+
+Roughly **50% cheaper** than Nano Banana Pro at every resolution, with batch pricing halving it again.
 
 ### Thinking Control
 
